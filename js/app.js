@@ -8,6 +8,8 @@ loadEventListeners()
 function loadEventListeners() {
   // Dispara cuando se presiona 'agregar a carrito'
   cursos.addEventListener('click', comprarCurso)
+  // Dispara cuando se preciona en remover del carrito
+  carrito.addEventListener('click', eliminarCurso)
 }
 
 //// Funciones
@@ -18,7 +20,8 @@ function comprarCurso(e) {
   if(e.target.classList.contains('agregar-carrito')) {
     const curso = e.target.parentElement.parentElement
     // Enviamos el curso seleccionado para tomar sus datos
-    leerDatosCurso(curso)
+    const datosCurso = leerDatosCurso(curso)
+    insertarEnCarrito(datosCurso)
   }
 }
 
@@ -30,11 +33,12 @@ function leerDatosCurso(curso) {
     precio: curso.querySelector('.precio span').textContent,
     id: curso.querySelector('a').getAttribute('data-id'),
   }
-  insertarCarrito(infoCurso)
+  return infoCurso
+  
 }
 
 // Muestra el curso seleccionado en el carrito
-function insertarCarrito(curso) {
+function insertarEnCarrito(curso) {
   const row = document.createElement('tr')
   const {imagen, titulo, precio, id} = curso;
 
@@ -42,11 +46,19 @@ function insertarCarrito(curso) {
     <td>
       <img src="${imagen}" width="100"/>
     </td>
-    <td>${titulo}</td
+    <td>${titulo}</td>
     <td>${precio}</td>
     <td>
       <a href="#" class="borrar-curso" data-id="${id}">X</a>
     </td>
   `;
   listaCursos.appendChild(row);
+}
+
+function eliminarCurso(e) {
+  e.preventDefault()
+  if (e.target.classList.contains('borrar-curso')) {
+    let curso = e.target.parentElement.parentElement
+    curso.remove()
+  }
 }
