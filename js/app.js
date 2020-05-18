@@ -2,6 +2,7 @@
 const carrito = document.querySelector('#carrito')
 const cursos = document.querySelector('#lista-cursos')
 const listaCursos = document.querySelector('#lista-carrito tbody')
+const vaciarCarritoBtn = document.querySelector('#vaciar-carrito')
 
 //// Listeners
 loadEventListeners()
@@ -10,6 +11,8 @@ function loadEventListeners() {
   cursos.addEventListener('click', comprarCurso)
   // Dispara cuando se preciona en remover del carrito
   carrito.addEventListener('click', eliminarCurso)
+  // Al vaciar el cartit
+  vaciarCarritoBtn.addEventListener('click', vaciarCarrito)
 }
 
 //// Funciones
@@ -40,7 +43,7 @@ function leerDatosCurso(curso) {
 // Muestra el curso seleccionado en el carrito
 function insertarEnCarrito(curso) {
   const row = document.createElement('tr')
-  const {imagen, titulo, precio, id} = curso;
+  const { imagen, titulo, precio, id } = curso
 
   row.innerHTML = `
     <td>
@@ -52,7 +55,7 @@ function insertarEnCarrito(curso) {
       <a href="#" class="borrar-curso" data-id="${id}">X</a>
     </td>
   `;
-  listaCursos.appendChild(row);
+  listaCursos.appendChild(row)
 }
 
 function eliminarCurso(e) {
@@ -61,4 +64,20 @@ function eliminarCurso(e) {
     let curso = e.target.parentElement.parentElement
     curso.remove()
   }
+}
+// Variar el carrito
+function vaciarCarrito() {
+  // console.time('listaCursos.innerHTML')
+  // listaCursos.innerHTML = ''
+  // // listaCursos.innerHTML: 0.599853515625ms // 6 Elementos
+  // console.timeEnd('listaCursos.innerHTML')
+
+  console.time('while')
+  1.349365234375ms // 6 Elements
+  while(listaCursos.firstChild) {
+    listaCursos.removeChild(listaCursos.firstChild);
+  }
+  console.timeEnd('while')
+
+  return false
 }
