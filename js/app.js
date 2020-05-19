@@ -25,6 +25,7 @@ function comprarCurso(e) {
     // Enviamos el curso seleccionado para tomar sus datos
     const datosCurso = leerDatosCurso(curso)
     insertarEnCarrito(datosCurso)
+    guardarCursoLocalStorage(datosCurso)
   }
 }
 
@@ -73,11 +74,34 @@ function vaciarCarrito() {
   // console.timeEnd('listaCursos.innerHTML')
 
   console.time('while')
-  1.349365234375ms // 6 Elements
+  // 1.349365234375ms // 6 Elements
   while(listaCursos.firstChild) {
     listaCursos.removeChild(listaCursos.firstChild);
   }
   console.timeEnd('while')
 
   return false
+}
+
+// LocalStorage
+function guardarCursoLocalStorage(curso) {
+  // Toma el valor del arreglo con LS o vacio
+  let cursos = obtenerCursosLocalStorage()
+
+  // El curso seleccionado se agrega al carrito
+  cursos.unshift(curso)
+
+  // Se agrega el cartito al LS
+  localStorage.setItem('cursos', JSON.stringify(cursos))
+}
+
+function obtenerCursosLocalStorage() {
+  let cursosLS = localStorage.getItem('cursos');
+  console.log(cursosLS);
+
+  (cursosLS === null)
+    ? cursosLS = []
+    : cursosLS = JSON.parse(cursosLS)
+
+  return cursosLS
 }
