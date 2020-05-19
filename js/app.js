@@ -13,6 +13,8 @@ function loadEventListeners() {
   carrito.addEventListener('click', eliminarCurso)
   // Al vaciar el cartit
   vaciarCarritoBtn.addEventListener('click', vaciarCarrito)
+  // Mostrar los cursos del LS al cargar
+  document.addEventListener('DOMContentLoaded', leerLocalStorage)
 }
 
 //// Funciones
@@ -40,9 +42,7 @@ function leerDatosCurso(curso) {
   return infoCurso
   
 }
-
-// Muestra el curso seleccionado en el carrito
-function insertarEnCarrito(curso) {
+function templateCursoCarrito(curso) {
   const row = document.createElement('tr')
   const { imagen, titulo, precio, id } = curso
 
@@ -56,7 +56,14 @@ function insertarEnCarrito(curso) {
       <a href="#" class="borrar-curso" data-id="${id}">X</a>
     </td>
   `;
-  listaCursos.appendChild(row)
+
+  return row
+}
+
+// Muestra el curso seleccionado en el carrito
+function insertarEnCarrito(curso) {
+  const cursoCarrito = templateCursoCarrito(curso)
+  listaCursos.appendChild(cursoCarrito)
 }
 
 function eliminarCurso(e) {
@@ -73,17 +80,24 @@ function vaciarCarrito() {
   // // listaCursos.innerHTML: 0.599853515625ms // 6 Elementos
   // console.timeEnd('listaCursos.innerHTML')
 
-  console.time('while')
+  // console.time('while')
   // 1.349365234375ms // 6 Elements
   while(listaCursos.firstChild) {
-    listaCursos.removeChild(listaCursos.firstChild);
+    listaCursos.removeChild(listaCursos.firstChild)
   }
-  console.timeEnd('while')
+  // console.timeEnd('while')
 
   return false
 }
+// Imprime los cursos del LS en el carrito
+function leerLocalStorage() {
+  let cursos = obtenerCursosLocalStorage()
+  for(curso of cursos) {
+    listaCursos.appendChild(templateCursoCarrito(curso))
+  }
+}
 
-// LocalStorage
+// Guardar curso del LS
 function guardarCursoLocalStorage(curso) {
   // Toma el valor del arreglo con LS o vacio
   let cursos = obtenerCursosLocalStorage()
@@ -95,9 +109,9 @@ function guardarCursoLocalStorage(curso) {
   localStorage.setItem('cursos', JSON.stringify(cursos))
 }
 
+// Traer cursos del LS
 function obtenerCursosLocalStorage() {
   let cursosLS = localStorage.getItem('cursos');
-  console.log(cursosLS);
 
   (cursosLS === null)
     ? cursosLS = []
@@ -105,3 +119,4 @@ function obtenerCursosLocalStorage() {
 
   return cursosLS
 }
+
