@@ -21,13 +21,19 @@ function loadEventListeners() {
 // Agregar curso al carrito de compras
 function comprarCurso(e) {
   e.preventDefault()
+  let cursosLS = obtenerCursosLocalStorage();
   // Delegation para agregar al carrito
-  if(e.target.classList.contains('agregar-carrito')) {
-    const curso = e.target.parentElement.parentElement
-    // Enviamos el curso seleccionado para tomar sus datos
-    const datosCurso = leerDatosCurso(curso)
-    insertarEnCarrito(datosCurso)
-    guardarCursoLocalStorage(datosCurso)
+  if (e.target.classList.contains('agregar-carrito')) {
+    const cursoHtml = e.target.parentElement.parentElement;
+    const datosCurso = leerDatosCurso(cursoHtml); // Enviamos el curso seleccionado para tomar sus datos
+
+    if(cursosLS.find(curso => curso.id === datosCurso.id)) {
+      console.log('Nea, ese curso ya lo agrego ;-)');
+    } else {
+      insertarEnCarrito(datosCurso)
+      guardarCursoLocalStorage(datosCurso)
+      console.info('Parcerito!, agregado!!!')
+    }
   }
 }
 
@@ -37,7 +43,7 @@ function leerDatosCurso(curso) {
     imagen: curso.querySelector('img').src,
     titulo: curso.querySelector('h4').textContent,
     precio: curso.querySelector('.precio span').textContent,
-    id: curso.querySelector('a').getAttribute('data-id'),
+    id: parseInt(curso.querySelector('a').getAttribute('data-id')),
   }
   return infoCurso
   
